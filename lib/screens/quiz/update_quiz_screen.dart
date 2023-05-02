@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_realtime_app/screens/session/create_session_screen.dart';
 
 class UpdateQuizScreen extends StatefulWidget {
   final QueryDocumentSnapshot<Object?> quiz;
@@ -260,6 +261,7 @@ class _UpdateQuizScreenState extends State<UpdateQuizScreen> {
   }
 
   void _createSession() {
-    print("Going to do it ...");
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CreateSessionScreen(quiz: widget.quiz)));
   }
 }
