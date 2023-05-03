@@ -14,7 +14,7 @@ class _HostSessionScreenState extends State<HostSessionScreen> {
   @override
   void initState() {
     super.initState();
-    print("we got that from the constructor");
+    print("we got that from the constructor host");
     print(widget.session.data());
   }
 

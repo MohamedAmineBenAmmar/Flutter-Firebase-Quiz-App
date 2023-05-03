@@ -48,7 +48,6 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
         .then((documentRef) {
       // Handle successful completion
       showSnackBar(context, 'Session added with ID: ${documentRef.id}');
-      // print('Session added with ID: ${documentRef.id}');
 
       // Retrieve the newly created document
       documentRef.get().then((snapshot) {
@@ -68,11 +67,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
     }).catchError((error) {
       // Handle error
       showSnackBar(context, 'Error adding session: $error');
-      // print('Error adding session: $error');
     });
-
-    // Navigate to other screen
-    // ...
   }
 
   @override

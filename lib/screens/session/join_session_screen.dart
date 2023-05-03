@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_realtime_app/providers/user_provider.dart';
+import 'package:flutter_firebase_realtime_app/screens/session/guest_session_screen.dart';
 import 'package:flutter_firebase_realtime_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -23,8 +24,10 @@ class _JoinSessionScreenState extends State<JoinSessionScreen> {
     // print("the session name");
     // print(_sessionController.text);
 
-    FirebaseFirestore.instance
-        .collection('sessions')
+    final CollectionReference sessions =
+        FirebaseFirestore.instance.collection('sessions');
+
+    sessions
         .where('name', isEqualTo: _sessionController.text)
         .get()
         .then((querySnapshot) {
@@ -32,8 +35,24 @@ class _JoinSessionScreenState extends State<JoinSessionScreen> {
         // A session with the given name already exists
         print('Session with name ${_sessionController.text} already exists!');
 
-        // redicrection to the guest screen
-        // ...
+        // Get the session ID
+        final String sessionId = querySnapshot.docs[0].id;
+
+        // Add the current authenticated user as a guest to the session
+        sessions.doc(sessionId).update({
+          'guests.${(user as User).uid}.me': (user as User).toJson(),
+          'guests.${(user as User).uid}.score': 0,
+        }).then((value) {
+          // Get the updated document snapshot
+          sessions.doc(sessionId).get().then((updatedDoc) {
+            // Redirect to the guest screen with the updated document snapshot
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => GuestSessionScreen(session: updatedDoc)));
+          });
+        }).catchError((error) {
+          // Handle error
+          showSnackBar(context, 'Error adding user as guest to session: $error');          
+        });
       } else {
         // Session does not exist
         showSnackBar(context,
