@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_realtime_app/providers/user_provider.dart';
+import 'package:flutter_firebase_realtime_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/user.dart';
@@ -15,11 +17,32 @@ class _JoinSessionScreenState extends State<JoinSessionScreen> {
 
   void _joinButtonPressed() {
     // Navigate to other screen with inputText
-    print("The current authenticated user data");
-    print((user as User).toJson());
+    // print("The current authenticated user data");
+    // print((user as User).toJson());
 
-    print("the session name");
-    print(_sessionController.text);
+    // print("the session name");
+    // print(_sessionController.text);
+
+    FirebaseFirestore.instance
+        .collection('sessions')
+        .where('name', isEqualTo: _sessionController.text)
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        // A session with the given name already exists
+        print('Session with name ${_sessionController.text} already exists!');
+
+        // redicrection to the guest screen
+        // ...
+      } else {
+        // Session does not exist
+        showSnackBar(context,
+            'Session with name ${_sessionController.text} does not exist.');
+      }
+    }).catchError((error) {
+      // Handle error
+      print('Error checking session: $error');
+    });
   }
 
   @override
