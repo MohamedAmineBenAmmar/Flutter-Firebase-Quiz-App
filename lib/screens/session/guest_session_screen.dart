@@ -76,8 +76,13 @@ class _GuestSessionScreenState extends State<GuestSessionScreen> {
         stream: widget.session.reference.snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.data!['started']) {
             return Center(
                 child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 CircularProgressIndicator(),
                 SizedBox(
@@ -86,10 +91,6 @@ class _GuestSessionScreenState extends State<GuestSessionScreen> {
                 Text("Waiting for the host to start the session")
               ],
             ));
-          }
-
-          if (!snapshot.data!['started']) {
-            return const Center(child: CircularProgressIndicator());
           }
 
           // Test if the current question has incremented by the host
