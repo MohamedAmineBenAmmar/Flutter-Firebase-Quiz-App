@@ -173,6 +173,7 @@ class _HostSessionScreenState extends State<HostSessionScreen> {
                 onPressed: () async {
                   setState(() {
                     started = true;
+                    _startSession();
                   });
                 },
                 child: Text('Start Quiz'),
@@ -188,6 +189,14 @@ class _HostSessionScreenState extends State<HostSessionScreen> {
     sessionRef.update({
       'currentQuestion': currentQuestionIndex + 1,
       'calculations': {'points': 100}
+    });
+  }
+
+  void _startSession() {
+    final sessionRef = widget.session.reference;
+
+    sessionRef.update({
+      'started': true,
     });
   }
 }

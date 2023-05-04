@@ -40,6 +40,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
       'quiz': widget.quiz.data(),
       'currentQuestion': 0,
       'calculations': {'points': 100},
+      'started': false
     };
 
     FirebaseFirestore.instance

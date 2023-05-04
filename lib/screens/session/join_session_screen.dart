@@ -51,7 +51,8 @@ class _JoinSessionScreenState extends State<JoinSessionScreen> {
           });
         }).catchError((error) {
           // Handle error
-          showSnackBar(context, 'Error adding user as guest to session: $error');          
+          showSnackBar(
+              context, 'Error adding user as guest to session: $error');
         });
       } else {
         // Session does not exist
