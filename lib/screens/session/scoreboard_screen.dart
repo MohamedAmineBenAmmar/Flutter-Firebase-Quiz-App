@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_realtime_app/models/user.dart';
+import 'package:flutter_firebase_realtime_app/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ScoreboardScreen extends StatefulWidget {
   final DocumentSnapshot<Object?> session;
@@ -13,12 +16,11 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
   bool isLoaded = false;
   Map<String, dynamic> guests = {};
   List<dynamic> sortedGuests = [];
+  dynamic user = null; // Storing the current authenticated user
 
   @override
   void initState() {
     super.initState();
-    print("we got that from the constructor guest");
-    print(widget.session.data());
     setState(() {
       isLoaded = true;
       guests = widget.session['guests'] as Map<String, dynamic>;
@@ -29,15 +31,13 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("the guests");
-    print(guests);
+    user = Provider.of<UserProvider>(context).getUser;
 
     // Sort the guests based on their scores
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Scoreboard'),
-      ),
+      // appBar: AppBar(
+      // title: Text('Scoreboard'),
+      // ),
       body: isLoaded
           ? Padding(
               padding: const EdgeInsets.all(8.0),
@@ -67,16 +67,18 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                           ],
                         )),
                     Expanded(child: Container()),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await FirebaseFirestore.instance
-                            .collection('sessions')
-                            .doc(widget.session.id)
-                            .delete();
-                        Navigator.pop(context);
-                      },
-                      child: Text('Destroy Session'),
-                    )
+                    (user as User).uid == widget.session['host']['uid']
+                        ? ElevatedButton(
+                            onPressed: () async {
+                              await FirebaseFirestore.instance
+                                  .collection('sessions')
+                                  .doc(widget.session.id)
+                                  .update({'isFinished': true});
+                              Navigator.pop(context);
+                            },
+                            child: Text('Finish Session'),
+                          )
+                        : Container()
                   ],
                 ),
               ),

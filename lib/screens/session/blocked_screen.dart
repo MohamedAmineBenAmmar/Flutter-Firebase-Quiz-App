@@ -8,24 +8,26 @@ class BlockedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: NetworkImage(photoUrl),
-        ),
-        SizedBox(height: 16),
-        Text(
-          'Your current score is: $score',
-          style: TextStyle(fontSize: 20),
-        ),
-        SizedBox(height: 16),
-        Text(
-          'Waiting for host to move on',
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 50,
+            backgroundImage: NetworkImage(photoUrl),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Your current score is: $score',
+            style: TextStyle(fontSize: 20),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Waiting for host to move on',
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
     );
   }
 }

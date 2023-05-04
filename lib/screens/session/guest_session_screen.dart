@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_realtime_app/models/user.dart';
 import 'package:flutter_firebase_realtime_app/providers/user_provider.dart';
 import 'package:flutter_firebase_realtime_app/screens/session/blocked_screen.dart';
+import 'package:flutter_firebase_realtime_app/screens/session/scoreboard_screen.dart';
 import 'package:flutter_firebase_realtime_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -95,14 +96,16 @@ class _GuestSessionScreenState extends State<GuestSessionScreen> {
 
           // Test if the current question has incremented by the host
           if (snapshot.data!['currentQuestion'] > _currentQuestionIndex) {
-            setState(() {
-              _currentQuestionIndex = snapshot.data!['currentQuestion'] as int;
-              hasAnswered = false;
-              isBlocked = false;
-            });
+            _currentQuestionIndex = snapshot.data!['currentQuestion'] as int;
+            hasAnswered = false;
+            isBlocked = false;
           }
 
           if (isBlocked) {
+            if ((snapshot.data!['quiz']['questions_count'] as int) - 1 ==
+                (snapshot.data!['currentQuestion'] as int)) {
+              return ScoreboardScreen(session: snapshot.data!);
+            }
             return (BlockedScreen(
                 score: snapshot.data!['guests'][(user as User).uid]['score'],
                 photoUrl: snapshot.data!['guests'][(user as User).uid]['me']
@@ -166,20 +169,24 @@ class _GuestSessionScreenState extends State<GuestSessionScreen> {
                                   if (snapshot.data!['calculations']['points'] >
                                       25) {
                                     _updateScore(
-                                        (user as User).uid,
+                                        (user as User),
                                         snapshot.data!['guests']
                                                 [(user as User).uid]['score'] +
                                             snapshot.data!['calculations']
                                                 ['points'],
-                                        true);
+                                        true,
+                                        snapshot.data!['calculations']
+                                                ['points'] -
+                                            25);
                                   } else {
                                     _updateScore(
-                                        (user as User).uid,
+                                        (user as User),
                                         snapshot.data!['guests']
                                                 [(user as User).uid]['score'] +
                                             snapshot.data!['calculations']
                                                 ['points'],
-                                        false);
+                                        false,
+                                        0);
                                   }
                                 }
 
@@ -192,10 +199,28 @@ class _GuestSessionScreenState extends State<GuestSessionScreen> {
                                 });
 
                                 Future.delayed(Duration(seconds: 5), () {
-                                  setState(() {
-                                    // your state change here
-                                    isBlocked = true;
-                                  });
+                                  if ((snapshot.data!['quiz']['questions_count']
+                                              as int) -
+                                          1 ==
+                                      (snapshot.data!['currentQuestion']
+                                          as int)) {
+                                    // Here I answered the last question
+                                    // Navigator.of(context).pushReplacement(
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) =>
+                                    //             ScoreboardScreen(
+                                    //                 session: snapshot.data!)));
+                                    setState(() {
+                                      // your state change here
+                                      isBlocked = true;
+                                    });
+                                  } else {
+                                    // test if we hit the last question
+                                    setState(() {
+                                      // your state change here
+                                      isBlocked = true;
+                                    });
+                                  }
                                 });
                               },
                               child: Text(option['text'] as String),
@@ -212,19 +237,21 @@ class _GuestSessionScreenState extends State<GuestSessionScreen> {
     );
   }
 
-  void _updateScore(String uid, int score, bool updatePointsCalculations) {
+  void _updateScore(
+      User user, int score, bool updatePointsCalculations, int newScore) {
     final sessionRef = widget.session.reference;
 
     if (updatePointsCalculations) {
       sessionRef.update(
         {
           'guests': {
-            uid: {
+            user.uid: {
+              'me': user.toJson(),
               'score': score,
             }
           },
           'calculations': {
-            'points': FieldValue.increment(-25),
+            'points': newScore,
           }
         },
       );
@@ -232,7 +259,8 @@ class _GuestSessionScreenState extends State<GuestSessionScreen> {
       sessionRef.update(
         {
           'guests': {
-            uid: {
+            user.uid: {
+              'me': user.toJson(),
               'score': score,
             }
           }
