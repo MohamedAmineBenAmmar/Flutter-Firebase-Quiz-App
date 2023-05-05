@@ -85,13 +85,8 @@ class _SignupScreenState extends State<SignupScreen> {
           width: double.infinity,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Flexible(
-              child: Container(),
-              flex: 2,
-            ),
-            SvgPicture.asset('assets/images/react-logo.svg'),
             const SizedBox(
-              height: 64,
+              height: 10,
             ),
             Stack(
               children: [
@@ -170,7 +165,7 @@ class _SignupScreenState extends State<SignupScreen> {
               height: 12,
             ),
             Flexible(
-              child: Container(),
+              child: Column(),
               flex: 1,
             ),
             Row(
@@ -190,7 +185,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                   ),
-                )
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                SvgPicture.asset(
+                  'assets/images/react-logo.svg',
+                  height: 30,
+                  width: 30,
+                ),
               ],
             ),
           ]),
