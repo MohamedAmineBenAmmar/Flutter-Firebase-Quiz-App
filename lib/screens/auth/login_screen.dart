@@ -69,7 +69,11 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(),
               flex: 2,
             ),
-            SvgPicture.asset('assets/images/react-logo.svg'),
+            SvgPicture.asset(
+              'assets/images/react-logo.svg',
+              height: 150,
+              width: 150,
+            ),
             const SizedBox(
               height: 64,
             ),
