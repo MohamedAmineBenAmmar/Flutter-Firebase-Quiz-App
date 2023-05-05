@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_realtime_app/models/user.dart';
+import 'package:flutter_firebase_realtime_app/providers/user_provider.dart';
 import 'package:flutter_firebase_realtime_app/screens/quiz/update_quiz_screen.dart';
 import 'package:flutter_firebase_realtime_app/utils/colors.dart';
 import 'package:flutter_firebase_realtime_app/widgets/not_found.dart';
+import 'package:provider/provider.dart';
 
 class QuizzesListScreen extends StatefulWidget {
   @override
@@ -11,6 +14,8 @@ class QuizzesListScreen extends StatefulWidget {
 
 class _QuizzesListScreenState extends State<QuizzesListScreen> {
   String filterQuery = '';
+  dynamic user = null;
+  String uid = "";
 
   void handleClickedQuiz(
       BuildContext context, QueryDocumentSnapshot<Object?> snap) {
@@ -24,6 +29,8 @@ class _QuizzesListScreenState extends State<QuizzesListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    user = Provider.of<UserProvider>(context).getUser;
+    uid = (user == null) ? "" : user.uid;
     return Column(
       children: [
         SizedBox(height: 50.0),
@@ -50,10 +57,21 @@ class _QuizzesListScreenState extends State<QuizzesListScreen> {
                   child: CircularProgressIndicator(),
                 );
               }
-              final quizzes = snapshot.data!.docs.where((quiz) => quiz['name']
-                  .toString()
-                  .toLowerCase()
-                  .contains(filterQuery.toLowerCase()));
+              // final quizzes = snapshot.data!.docs.where((quiz) => quiz['name']
+              //     .toString()
+              //     .toLowerCase()
+              //     .contains(filterQuery.toLowerCase()));
+              if (uid.length == 0) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              final quizzes = snapshot.data!.docs.where((quiz) =>
+                  quiz['uid'] == uid &&
+                  quiz['name']
+                      .toString()
+                      .toLowerCase()
+                      .contains(filterQuery.toLowerCase()));
               if (quizzes.length == 0) {
                 return NotFound(
                   message: "No quizzes found wit that name",

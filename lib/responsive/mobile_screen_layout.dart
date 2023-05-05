@@ -55,7 +55,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home,
+              Icons.list,
               color: (_page == 0) ? primaryColor : secondaryColor,
             ),
             label: '',
@@ -63,7 +63,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           ),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.search,
+                Icons.share,
                 color: (_page == 1) ? primaryColor : secondaryColor,
               ),
               label: '',
@@ -77,7 +77,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
               backgroundColor: primaryColor),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.favorite,
+              Icons.settings,
               color: (_page == 3) ? primaryColor : secondaryColor,
             ),
             label: '',

@@ -39,11 +39,11 @@ class ProfileScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage(user.photoUrl),
+              backgroundImage: NetworkImage(user!.photoUrl),
             ),
             SizedBox(height: 16),
             Text(
-              '${user.firstName} ${user.lastName}',
+              '${user!.firstName} ${user!.lastName}',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_realtime_app/models/user.dart';
+import 'package:flutter_firebase_realtime_app/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class CreateQuizScreen extends StatefulWidget {
   @override
@@ -7,6 +10,7 @@ class CreateQuizScreen extends StatefulWidget {
 }
 
 class _CreateQuizScreenState extends State<CreateQuizScreen> {
+  dynamic user = null; // Storing the current authenticated user
   final _formKey = GlobalKey<FormState>();
   final _quizNameController = TextEditingController();
   final _questionController = TextEditingController();
@@ -59,6 +63,7 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
         'name': _quizNameController.text,
         'questions_count': _questions.length,
         'questions': _questions,
+        'uid': (user as User).uid
       };
 
       await FirebaseFirestore.instance
@@ -82,6 +87,7 @@ class _CreateQuizScreenState extends State<CreateQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
+    user = Provider.of<UserProvider>(context).getUser;
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Quiz'),
