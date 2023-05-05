@@ -76,8 +76,11 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 250,
-                  width: 250,
+                  height: 100,
+                ),
+                SizedBox(
+                  height: 200,
+                  width: 200,
                   child: SvgPicture.asset(
                     'assets/images/react-logo.svg',
                   ),
