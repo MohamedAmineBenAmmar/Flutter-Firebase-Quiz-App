@@ -38,7 +38,10 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading = false;
     });
-    if (res != 'sucess') {
+
+    print("lool");
+    print(res);
+    if (res != 'success') {
       showSnackBar(context, res);
     } else {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
