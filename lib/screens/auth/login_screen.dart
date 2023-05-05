@@ -11,10 +11,10 @@ import '../../responsive/responsive_layout_screen.dart';
 import '../../responsive/web_screen_layout.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -29,31 +29,39 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
   }
 
-  void loginUser() async {
+  Future<void> _loginUser() async {
     setState(() {
       _isLoading = true;
     });
-    String res = await AuthMethods().loginUser(
-        email: _emailController.text, password: _passwordController.text);
+
+    final res = await AuthMethods().loginUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
     setState(() {
       _isLoading = false;
     });
 
-    print("lool");
-    print(res);
     if (res != 'success') {
       showSnackBar(context, res);
     } else {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const ResponsiveLayout(Key("ResponsiveLayout"),
-              WebScreenLayout(), MobileScreenLayout())));
+        builder: (context) => const ResponsiveLayout(
+          Key("ResponsiveLayout"),
+          WebScreenLayout(),
+          MobileScreenLayout(),
+        ),
+      ));
     }
   }
 
-  void navigateToSignUpScreen() {
-    print("navigation to the signup screen");
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const SignupScreen()));
+  void _navigateToSignUpScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const SignupScreen(),
+      ),
+    );
   }
 
   @override
@@ -61,85 +69,96 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 32),
+          padding: const EdgeInsets.symmetric(horizontal: 32),
           width: double.infinity,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Flexible(
-              child: Container(),
-              flex: 2,
-            ),
-            SvgPicture.asset(
-              'assets/images/react-logo.svg',
-              height: 150,
-              width: 150,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextFieldInput(
-                textEditingController: _emailController,
-                hintText: "Enter your email",
-                textInputType: TextInputType.emailAddress),
-            const SizedBox(
-              height: 24,
-            ),
-            TextFieldInput(
-                textEditingController: _passwordController,
-                hintText: "Enter your password",
-                textInputType: TextInputType.text,
-                isPassword: true),
-            const SizedBox(
-              height: 24,
-            ),
-            InkWell(
-                onTap: loginUser,
-                child: _isLoading
-                    ? (const Center(
-                        child: CircularProgressIndicator(
-                          color: primaryColor,
-                        ),
-                      ))
-                    : (Container(
-                        child: const Text('Login'),
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: const ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
-                          ),
-                          color: blueColor,
-                        ),
-                      ))),
-            const SizedBox(
-              height: 12,
-            ),
-            Flexible(
-              child: Container(),
-              flex: 1,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  child: const Text("Don't have an account? "),
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                SizedBox(
+                  height: 200,
                 ),
-                InkWell(
-                  onTap: navigateToSignUpScreen,
-                  child: Container(
-                    child: const Text(
-                      "Signup",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: blueColor),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                SizedBox(
+                  height: 250,
+                  width: 250,
+                  child: SvgPicture.asset(
+                    'assets/images/react-logo.svg',
                   ),
-                )
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFieldInput(
+                  textEditingController: _emailController,
+                  hintText: "Enter your email",
+                  textInputType: TextInputType.emailAddress,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                TextFieldInput(
+                  textInputType: TextInputType.text,
+                  textEditingController: _passwordController,
+                  hintText: "Enter your password",
+                  isPassword: true,
+                ),
+                const SizedBox(
+                  height: 32,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _loginUser,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                        : const Text(
+                            "Log in",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: blueColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Don't have an account? ",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: _navigateToSignUpScreen,
+                      child: Text(
+                        "Sign Up",
+                        style: const TextStyle(
+                          color: blueColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
-          ]),
+          ),
         ),
       ),
     );
