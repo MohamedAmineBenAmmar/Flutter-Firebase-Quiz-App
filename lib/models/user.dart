@@ -23,14 +23,20 @@ class User {
       };
 
   static User fromSnap(DocumentSnapshot snap) {
-    var snapshot = snap.data() as Map<String, dynamic>;
-
-    return User(
-      firstName: snapshot["firstName"],
-      lastName: snapshot["lastName"],
-      uid: snapshot["uid"],
-      email: snapshot["email"],
-      photoUrl: snapshot["photoUrl"],
-    );
+    final data = snap.data();
+    if (data != null) {
+      final dataMap = data as Map<String, dynamic>;
+      // Use dataMap
+      return User(
+        firstName: dataMap["firstName"],
+        lastName: dataMap["lastName"],
+        uid: dataMap["uid"],
+        email: dataMap["email"],
+        photoUrl: dataMap["photoUrl"],
+      );
+    } else {
+      // Handle null data
+      return null as User;
+    }
   }
 }
