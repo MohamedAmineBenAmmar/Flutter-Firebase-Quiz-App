@@ -50,6 +50,7 @@ class _UpdateQuizScreenState extends State<UpdateQuizScreen> {
             onChanged: (String newValue) {
               handleInputChange(index, false, newValue, fieldName);
             },
+
             initialValue: initialValue,
             decoration: InputDecoration(
               labelText: fieldName,
@@ -77,6 +78,7 @@ class _UpdateQuizScreenState extends State<UpdateQuizScreen> {
   void handleDelete(int index) {
     setState(() {
       _questions.removeAt(index);
+      print(_questions);
     });
   }
 
@@ -134,7 +136,7 @@ class _UpdateQuizScreenState extends State<UpdateQuizScreen> {
                                   Text(
                                     'Question ${index + 1}',
                                     style:
-                                        Theme.of(context).textTheme.subtitle1,
+                                        Theme.of(context).textTheme.titleMedium,
                                   ),
                                   IconButton(
                                     icon: Icon(Icons.delete),
@@ -149,6 +151,7 @@ class _UpdateQuizScreenState extends State<UpdateQuizScreen> {
                                   handleInputChange(index, true, newValue, "");
                                 },
                                 initialValue: _questions[index]['question'],
+
                                 decoration: InputDecoration(
                                   labelText: 'Question',
                                 ),
